@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" 
+        crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="./styles.css". />
+
+    <title>Demo chat</title>
+</head>
+<body>
+     <div class="container mt-1">
+         <div class="row mb-5">
+             <div class="col-md-12">
+                <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                    <a class="navbar-brand" href="#">Demo chat</a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                <a class="nav-link js-onSign" data-action="signIn" href="#">Sign In</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link js-onSign" data-action="signUp" href="#">Sign up</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+             </div>
+         </div>
+         <!-- <div class="row">
+             <div class="col-md-8 offset-md-2">
+                <div class="alert alert-success" role="alert">
+                   Active session
+                </div>
+             </div>
+         </div> -->
+         <div class="row">
+            <div class="col-md-4 d-flex flex-column align-items-center">
+                <div class="card w-100 h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Users</h5>
+                        <span class="js-loading-users">
+                            <a class="js-onSign" data-action="signIn" href="#">Sign in</a>
+                            /
+                            <a class="js-onSign" data-action="signUp" href="#">Sign up</a>  
+                            to load users.
+                        </span>
+                        <div class="user-list">
+                            <ul class="pl-0 mb-0">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- <button type="button" class="btn btn-primary js-update-user-btn m-1">Update user</button> -->
+            </div>
+            <div class="col-md-8">
+                <div class="card vh-70">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <h5 class="card-title">Chat</h5>
+                        <div class="messages-container">
+                            <div class="w-100 js-no-messages text-center mt-5">
+                                <span>No messages</span>
+                            </div>
+                        </div>
+                        <div class="w-100 d-flex ">
+                            <div class="form-group w-75 mb-0">
+                                <textarea class="form-control resize-none js-message" id="txtUserInput" rows="3"></textarea>
+                            </div>
+                            <button type="button" class="btn btn-success w-25 js-send">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+     </div>   
+    <!-- Modals -->
+    <div class="modal fade" id="modal-signUp" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sign up</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Username</label>
+                                    <input type="text" class="form-control" id="txtEmailSignUp" aria-describedby="emailHelp" placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Password</label>
+                                    <input type="text" value="12345678" class="form-control" id="txtPassSignUp" placeholder="Password">
+                                </div>
+                                <button type="button" class="btn btn-primary js-create-user-btn m-1">Create</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-signIn" tabindex="-2" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sign in</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card mt-2">
+                        <div class="card-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Username</label>
+                                    <input type="text" class="form-control" id="txtEmailSignIn" aria-describedby="emailHelp" placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Password</label>
+                                    <input type="text" value="12345678" class="form-control" id="txtPassSignIn" placeholder="Password">
+                                </div>
+                                <button type="button" class="btn btn-primary js-login-user-btn m-1">Login</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quickblox/2.12.2/quickblox.min.js"></script>
+    <script src="chat.js"></script>
+</body>
+</html>

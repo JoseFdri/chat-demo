@@ -1,0 +1,81 @@
+.bg-blue {
+    background-color: #5c5ce8;
+}
+.txt-message {
+    border-radius: 10px;
+    padding: 10px;
+    width: 70%;
+    margin: 10px 0px;
+}
+.message-send{
+    float: right;
+    background-color: #5c5ce8;
+    color: white;
+}
+
+.message-received {
+    float: left;
+    border: 1px solid #dcd8d8;
+}
+.messages-container {
+    overflow-y: scroll;
+    max-height: 456px;
+    min-height: 456px;
+    border: 1px solid #e0dfdf;
+    padding: 0px 10px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column; 
+}
+
+.user-list::-webkit-scrollba, .messages-container::-webkit-scrollbar {
+    width: 5px;
+}
+   
+.user-list::-webkit-scrollbar-thumb, .messages-container::-webkit-scrollbar-thumb {
+    background: #888; 
+}
+
+.user-list::-webkit-scrollbar-thumb:hover, .messages-container::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+}
+.vh-70 {
+    height: 70vh;
+}
+
+li {
+    list-style: none;
+}
+
+.user-list {
+    overflow-y: scroll;
+    max-height: 579px;
+    min-height: 579px;
+}
+
+.user-list li {
+    padding: 5px 9px;
+    margin: 2px 0px;
+    border-bottom: 1px solid #e9ebeb;
+    cursor: pointer;
+    color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-selected {
+    background-color: #e9ebeb;
+}
+.status {
+    border-radius: 100%;
+    width: 10px;
+    height: 10px;
+    background: grey;
+}
+.status-active {
+    background-color: #93e810;
+}
+.resize-none {
+    resize: none;
+}
