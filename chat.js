@@ -197,6 +197,8 @@ let handleDialog = function () {
     console.log('handle dialog', dialogId)
     if(dialogId) {
         getDialog(dialogId)
+    }else {
+        cleanChat(true)
     }
     updateUserBadge(currentOpponentId, true)
 }
@@ -296,6 +298,10 @@ let sendMessage = function () {
     renderMessage('send', message)
     scrollTobottom(true)
     $('.js-message').val('');
+    let dialogId = getDialogIdByCurrentUserId()
+    if(!dialogId) {
+        getDialogs();
+    }
 }
 
 let renderMessage = function (type, message){
@@ -343,8 +349,8 @@ let renderUsersList = function (users, currentUserId){
         $('.user-list ul').html('');
         $('.js-loading-users').hide()
     }
-
-    users.items.forEach(element => {
+    for (let i = 0; i <  users.items.length; i++) {
+        let element = users.items[i];
         let userId = element.user.id;
         if(userId != currentUserId) {
             html = htmlTemplate
@@ -360,7 +366,11 @@ let renderUsersList = function (users, currentUserId){
             }
             $('.user-list ul').append(html)
         }
-    });
+    }
+    if(currentOpponentId) {
+        $(`.user-list [data-id='${currentOpponentId}']`)
+            .addClass('user-selected')
+    }
 }
 
 let lookForUnreadMessages = function (userId) {
