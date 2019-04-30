@@ -1,6 +1,6 @@
 let appId = 76776;
 let diaglogsList = []
-let diaglogHistory = []
+let dialogHistory = []
 let userList = []
 let userId = false;
 let currentOpponentId = false;
@@ -116,10 +116,11 @@ let login = function() {
     
     QB.login(params, function(err, result) {
         if(result){
-            $('.js-txt-login').removeClass('d-none')
-            $('.js-spinner-login-btn').addClass('d-none')
-            $('.js-spinner-users').removeClass('d-none')
+            $('.js-txt-login').removeClass('d-none');
+            $('.js-spinner-login-btn').addClass('d-none');
+            $('.js-spinner-users').removeClass('d-none');
             $('.js-loading-users').hide();
+            $('#txtUserName').html(result.login)
             connectChat(result.id, params.password)
             $('#modal-signIn').modal('hide')
             userId = result.id;
@@ -145,7 +146,7 @@ let updateUserInfo = function() {
     });
 }
 
-var createUser = function (){
+var createUser = function () {
     var params = { 
         'login': $('#txtEmailSignUp').val(), 
         'password': $('#txtPassSignUp').val(), 
@@ -162,50 +163,76 @@ var createUser = function (){
     });
 }
 
-let listAllUsers = function(ignoreId) {
+let listAllUsers = function(currentUserId) {
     var params = { page: '1', per_page: '100'};
  
-    QB.users.listUsers(params, function(err, users){
-    if (users) {
-        console.log('list of users', users)
-        userList = users;
-        renderUsersList(users, ignoreId)
-        listenSelectUserEvent()
-    } else {
-        console.log('something went wrong retrieving the list of users', users)
-    }
+    QB.users.listUsers(params, function(err, users) {
+        if (users) {
+            console.log('list of users', users)
+            userList = users;
+            renderUsersList(users, currentUserId)
+            listenSelectUserEvent()
+        } else {
+            console.log('something went wrong when retrieving the list of users', users)
+        }
     });
 }
 
-let listenSelectUserEvent = function (){
+let listenSelectUserEvent = function () {
     $('.js-user').on('click', function (){
         $('.js-user').removeClass('user-selected')
         $(this).addClass('user-selected')
         let opponentId = $(this).data('id')
         if(currentOpponentId != opponentId) {
             currentOpponentId = opponentId
-            handleDialog(opponentId)
+            handleDialog()
         }
         console.log('user selected => ', opponentId)
     })
 }
 
-let handleDialog = function (opponentId) {
+let handleDialog = function () {
     cleanChat()
-    let dialogId = null;
+    let dialogId = getDialogIdByCurrentUserId()
+    console.log('handle dialog', dialogId)
+    if(dialogId) {
+        getDialog(dialogId)
+    }
+    updateUserBadge(currentOpponentId, true)
+}
+
+let getDialog = async function (dialogId) {
+    var params = {chat_dialog_id: dialogId, sort_desc: 'date_sent', limit: 100, skip: 0};
+    await QB.chat.message.list(params, function(err, messages) {
+        if (messages) {
+            console.log('dialog received', messages)
+            renderDialog(messages.items.reverse())
+            return
+        } else {
+            console.log(err);
+            return false;
+        }
+    });
+}
+
+let renderDialog = function (dialog) {
+    cleanChat()
+    for (let i = 0; i < dialog.length; i++) {
+        let element = dialog[i];
+        let type = element.sender_id == userId ? 'send' : 'received';
+        renderMessage(type , element.message)
+    }
+    scrollTobottom()
+}
+
+let getDialogIdByCurrentUserId = function () {
     for (let i = 0; i < diaglogsList.length; i++) {
         let dialog = diaglogsList[i];
-        if(dialog.type == 3 && dialog.occupants_ids.indexOf(opponentId) != -1) {
-            dialogId = dialog._id;
+        if(dialog.type == 3 && dialog.occupants_ids.indexOf(currentOpponentId) != -1) {
+            return dialog._id;
         }
     }
-    console.log('handle dialog', dialogId, diaglogHistory)
-    if(!diaglogHistory[dialogId] && dialogId) {
-        getDialog(dialogId)
-    }else if(dialogId){
-        getDialogFromMemory(dialogId)
-    }
-    updateUserBadge(opponentId, true)
+    return false;
 }
 
 let scrollTobottom = function (smooth = false) {
@@ -222,47 +249,16 @@ let cleanChat = function (showNoMessage = false) {
     }
 }
 
-let getDialogFromMemory = async function (dialogId) {
-    cleanChat()
-    await diaglogHistory[dialogId].items.reverse().forEach(function (element) {
-        let type = element.sender_id == userId ? 'send' : 'received';
-        renderMessage(type , element.message)
-    })
-    scrollTobottom()
-}
-
-let getDialog = async function (dialogId) {
-    var params = {chat_dialog_id: dialogId, sort_desc: 'date_sent', limit: 100, skip: 0};
-    await QB.chat.message.list(params, function(err, messages) {
-        if (messages) {
-            cleanChat()
-            diaglogHistory[dialogId] = messages;
-            let arrayItems = messages.items.reverse();
-            for (let i = 0; i < arrayItems.length; i++) {
-                let element = arrayItems[i];
-                let type = element.sender_id == userId ? 'send' : 'received';
-                renderMessage(type , element.message)
-            }
-            scrollTobottom()
-            console.log('chat history', messages)
-        }else{
-            console.log(err);
-        }
-    });
-}
-
-let  createDialog = async function (oponnetId) {
+let  createDialog = async function () {
     var params = {
         type: 3,
-        occupants_ids: [oponnetId]
+        occupants_ids: [currentOpponentId]
       };
-       
       await QB.chat.dialog.create(params, function(err, createdDialog) {
         if (err) {
           console.log(err);
         } else {
             console.log('dialog created', createdDialog);
-            getDialogs()
             return createdDialog
         }
       });
@@ -298,25 +294,8 @@ let sendMessage = function () {
       };
     QB.chat.send(currentOpponentId, msg)
     renderMessage('send', message)
-    let dialogId = verifyIfDialogExist(currentOpponentId)
-    console.log('verify if exist dialog id', dialogId)
-    if(dialogId) {
-        removeDialogFromList(dialogId)
-    }else {
-        getDialogs()
-    }
     scrollTobottom(true)
     $('.js-message').val('');
-}
-
-let verifyIfDialogExist = function (opponentId){
-    for (let i = 0; i < diaglogsList.length; i++) {
-        dialog = diaglogsList[i];
-        if(dialog.occupants_ids.indexOf(opponentId) != -1) {
-            return dialog._id
-        }
-    }
-    return false;
 }
 
 let renderMessage = function (type, message){
@@ -331,42 +310,13 @@ let renderMessage = function (type, message){
 }
 
 let listenMessages = function (userId, msg) {
-    let entryDialogId = msg.extension.dialog_id
-    let dialogInMemory = diaglogsList.filter( x => x._id == entryDialogId)
-    let dialog = false;
-    if(dialogInMemory.length > 0){
-        dialog = dialogInMemory[0]
-        handleIncomingMessages(dialog, msg)
-    } else {
-        getDialogs().then(function (){
-            let dialogInMemory = diaglogsList.filter( x => x._id == entryDialogId)
-            let dialog = false;
-            if(dialogInMemory.length > 0){
-                dialog = dialogInMemory[0]
-                handleIncomingMessages(dialog, msg)
-            }
-        })
-    }
-    console.log('message received ', msg)
-}
-
-let handleIncomingMessages = function (dialog, msg){
-    console.log('dialog xd', dialog)
-    if(dialog.occupants_ids.indexOf(currentOpponentId) != -1) {
+    if(userId == currentOpponentId) {
         renderMessage('received' , msg.body)
         scrollTobottom(true)
-        // remove to be able loaded when the user goes back, this way we avoid updating 
-        // the chat history in memory for incoming messages
-        removeDialogFromList(dialog._id)
     } else {
-        let opponentId = dialog.occupants_ids[1];
-        updateUserBadge(opponentId) 
+        getDialogs()
     }
-}
-
-let removeDialogFromList = function (dialogId){
-    diaglogHistory[dialogId] = false;
-    console.log('remove index', diaglogsList)
+    console.log('message received ', msg)
 }
 
 let updateUserBadge = function(userId, reset = false) {

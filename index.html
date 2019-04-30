@@ -13,7 +13,7 @@
 </head>
 <body>
      <div class="container mt-1">
-         <div class="row mb-5">
+         <div class="row mb-2">
              <div class="col-md-12">
                 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
                     <a class="navbar-brand" href="#">Demo chat</a>
@@ -27,6 +27,16 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link js-onSign" data-action="signUp" href="#">Sign up</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item dropdown my-2 my-lg-0">
+                                <a class="nav-link dropdown-toggle" href="#" id="txtUserName" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Dropdown
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                  <a class="dropdown-item" href="#">Sign out</a>
+                                </div>
                             </li>
                         </ul>
                     </div>
@@ -76,9 +86,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="w-100 d-flex ">
-                            <div class="form-group w-75 mb-0">
-                                <textarea class="form-control resize-none js-message" id="txtUserInput" rows="3"></textarea>
+                        <div class="w-100 d-flex justify-content-between input-container">
+                            <div class="form-group w-70 mb-0">
+                                <textarea class="form-control resize-none js-message h-100" id="txtUserInput"></textarea>
                             </div>
                             <button type="button" class="btn btn-success w-25 js-send">Send</button>
                         </div>
@@ -86,7 +96,8 @@
                 </div>
             </div>
          </div>
-     </div>   
+     </div> 
+     
     <!-- Modals -->
     <div class="modal fade" id="modal-signUp" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">

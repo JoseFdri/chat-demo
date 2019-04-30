@@ -1,3 +1,6 @@
+* {
+    outline: none;
+}
 .bg-blue {
     background-color: #5c5ce8;
 }
@@ -19,13 +22,15 @@
 }
 .messages-container {
     overflow-y: scroll;
-    max-height: 456px;
-    min-height: 456px;
+    height: 76%;
     border: 1px solid #e0dfdf;
     padding: 0px 10px;
-    border-radius: 20px;
     display: flex;
     flex-direction: column; 
+}
+
+.input-container {
+    height: 12%;
 }
 
 .user-list::-webkit-scrollba, .messages-container::-webkit-scrollbar {
@@ -39,8 +44,12 @@
 .user-list::-webkit-scrollbar-thumb:hover, .messages-container::-webkit-scrollbar-thumb:hover {
     background: #555; 
 }
+
 .vh-70 {
     height: 70vh;
+}
+.w-70 {
+    width: 70%;
 }
 
 li {
@@ -48,9 +57,8 @@ li {
 }
 
 .user-list {
-    overflow-y: scroll;
-    max-height: 579px;
-    min-height: 579px;
+    overflow-y: scroll; 
+    height: 94%;
 }
 
 .user-list li {
